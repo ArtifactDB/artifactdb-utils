@@ -10,8 +10,6 @@ import dateparser
 import pytz
 
 
-
-
 def add_sys_path(path):
     if not path in sys.path:
         sys.path.insert(0, path)
@@ -176,4 +174,14 @@ def flatten_dict(dictionary:dict, sep:str="."):
         else:
             ret.update({key:val})
     return ret
+
+
+def compile_python_file(py_path):
+    """Compiles python file. Returns dict with ready-to-use functionality."""
+    ns = {}
+    with open(py_path) as f:
+        code = compile(f.read(), py_path, 'exec')
+        exec(code, ns, ns)
+
+    return ns
 
