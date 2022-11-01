@@ -185,3 +185,61 @@ def compile_python_file(py_path):
 
     return ns
 
+
+def get_callable_info(callable_obj, keep_self=False):
+    """Function returns information about parameters and docs."""
+    args_spec = inspect.getfullargspec(callable_obj)
+
+    named_params = {}
+    for par in args_spec.args:
+        if par == "self" and not keep_self:
+            continue
+        named_params[par] = {}
+
+    if args_spec.kwonlydefaults:
+        for par in args_spec.kwonlydefaults:
+            if par == "self" and not keep_self:
+                continue
+            named_params[par] = {}
+            named_params[par]['default'] = args_spec.kwonlydefaults[par]
+
+    for par in args_spec.annotations:
+        if par in named_params:
+            par_type = args_spec.annotations[par]
+            if hasattr(par_type, "__name__"):
+                par_type = par_type.__name__
+            else:
+                par_type = repr(par_type)
+            named_params[par]['type'] = par_type
+
+    for par in args_spec.kwonlyargs:
+        named_params[par]['kwargs_only'] = True
+
+    callable_info = {
+        "named_params": named_params
+    }
+
+    if args_spec.varargs:
+        args_name = args_spec.varargs
+        args = {
+            "name": args_name
+        }
+        if args_name in args_spec.annotations:
+            args["type"] = args_spec.annotations[args_name].__name__
+        callable_info["args"] = args
+    else:
+        callable_info["args"] = None
+
+    if args_spec.varkw:
+        kwargs_name = args_spec.varkw
+        kwargs = {
+            "name": kwargs_name
+        }
+        if kwargs_name in args_spec.annotations:
+            kwargs["type"] = args_spec.annotations[kwargs_name].__name__
+        callable_info["kwargs"] = kwargs
+    else:
+        callable_info["kwargs"] = None
+
+    callable_info["docs"] = callable_obj.__doc__
+    return callable_info
