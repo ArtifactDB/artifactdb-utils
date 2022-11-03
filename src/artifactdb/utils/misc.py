@@ -179,12 +179,12 @@ def flatten_dict(dictionary:dict, sep:str="."):
 
 def compile_python_file(py_path):
     """Compiles python file. Returns dict with ready-to-use functionality."""
-    ns = {}
-    with open(py_path) as f:
-        code = compile(f.read(), py_path, 'exec')
-        exec(code, ns, ns)
+    compiled = {}
+    with open(py_path) as file:
+        code = compile(file.read(), py_path, 'exec')
+        exec(code, compiled, compiled) # pylint: disable=exec-used # TODO: use importlib.import_module
 
-    return ns
+    return compiled
 
 
 def get_callable_info(callable_obj, keep_self=False):
