@@ -4,6 +4,9 @@ import asyncio
 import importlib
 import uuid
 import inspect
+import hashlib
+import json
+import base64
 from datetime import datetime, timedelta
 from itertools import islice
 
@@ -244,3 +247,17 @@ def get_callable_info(callable_obj, keep_self=False):
 
     callable_info["docs"] = callable_obj.__doc__
     return callable_info
+
+
+def build_ikys_key(secret_path, hash_func="sha256"):
+    hfunc = getattr(hashlib,hash_func)
+    hashed = hfunc(open(secret_path).read().encode()).hexdigest()
+    jdoc = {
+        "type": "ikys",
+        "hash_function": hash_func,
+        "secret_path": secret_path,
+        "hashed_secret": hashed
+    }
+
+    return base64.b64encode(json.dumps(jdoc).encode()).decode()
+
