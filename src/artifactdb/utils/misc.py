@@ -68,8 +68,11 @@ def get_root_url(request):
     # note: we might serve incorrect proto, if https, traefik only reports http because https only happend at AWS ELB level
     proto = request.headers.get("x-forwarded-proto")
     host = request.headers.get("x-forwarded-host")
+    prefix = request.headers.get("x-adb-prefix","").rstrip("/")
     if proto and host:
         root_url = urllib.parse.urlunparse((proto,host,'',None,None,None))
+        if prefix:
+            root_url += prefix
     else:
         root_url = ""  # give up :(
     root_url = root_url.rstrip("/")
