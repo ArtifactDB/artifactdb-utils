@@ -13,4 +13,5 @@ CREATED = "created"  # project was created, now ready
 VERSION_CREATED = "version-created"  # new version within an existing project added, now ready
 MODIFIED = "version-modified"  # a version was modified
 FAILED = "failed"  # general failure
-
+ALL_INDEXED = "all-indexed"  # all projects are fully indexed
+ALL_INDEXED_FAILED = "all-indexed-failed"  # failure during indexing process
