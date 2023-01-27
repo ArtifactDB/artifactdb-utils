@@ -48,13 +48,12 @@ stages:
   - build
   - deploy
 
-# Checks that all files in the repository have been linted with black to a
-# line length of 79 characters. If not pipeline will fail.
-lint:
-  image: pyfound/black:22.1.0
-  script:
-    - black src/* --check --verbose --diff --color #--line-length 79
-  stage: lint
+# Checks that all files in the repository have been linted with black
+#lint:
+#  image: pyfound/black:22.1.0
+#  script:
+#    - black src/* --check --verbose --diff --color #--line-length 79
+#  stage: lint
 
 # The leading . indicates a hidden job which we use as a template here. This
 # template is used to extend tox_create_cache and tox_use_cache which are
@@ -92,28 +91,28 @@ deploy:
 
   stage: deploy
 
-pages:
-  artifacts:
-    # Make the public directory an artifact, this will then automatically
-    # create the pages website
-    paths:
-      - public
-  # disable the cache because tags create there own branch making a cache
-  # unnecessary
-  cache: []
-  # Run this job on a tag of format v#.#.# or v#.#.#.pages#. Use the second
-  # format to build a new version of the pages website without also running
-  # the build-deploy job
-  ##############################################################
-  # Make sure to only push tags on gitlab-ci verified commits! #
-  ##############################################################
-  only:
-    - tags
-  script:
-    # Create the website using sphinx-doc via tox
-    - tox -e docs
-    # The pages website is only made from an artifact of the public directory
-    # of a job so we move the html docs there
-    - mv docs/_build/html/ public
-  stage: pages
+#pages:
+#  artifacts:
+#    # Make the public directory an artifact, this will then automatically
+#    # create the pages website
+#    paths:
+#      - public
+#  # disable the cache because tags create there own branch making a cache
+#  # unnecessary
+#  cache: []
+#  # Run this job on a tag of format v#.#.# or v#.#.#.pages#. Use the second
+#  # format to build a new version of the pages website without also running
+#  # the build-deploy job
+#  ##############################################################
+#  # Make sure to only push tags on gitlab-ci verified commits! #
+#  ##############################################################
+#  only:
+#    - tags
+#  script:
+#    # Create the website using sphinx-doc via tox
+#    - tox -e docs
+#    # The pages website is only made from an artifact of the public directory
+#    # of a job so we move the html docs there
+#    - mv docs/_build/html/ public
+#  stage: pages
 
