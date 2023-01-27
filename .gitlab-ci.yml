@@ -83,8 +83,8 @@ build:
 deploy:
   cache:
     policy: pull
-#  only:
-#    - tags
+  only:
+    - tags
   script:
     - tox -e build
     - tox -e publish -- $TOX_EXTRA_ARG
