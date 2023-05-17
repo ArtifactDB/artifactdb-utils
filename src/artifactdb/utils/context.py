@@ -11,6 +11,12 @@ switch_context = es_switch_context  # backward compatibility
 # override default storage client in StorageManager
 storage_default_client_context:ContextVar[str] = ContextVar("storage-default-client",default=None)
 storage_switch_context:ContextVar[str] = ContextVar("storage-switch-context",default=None)
+# filter sequence clients to matching context name (if any)
+# from switch.contexts in config:
+# => key in the contexts map
+sequence_switch_key:ContextVar[str] = ContextVar("sequence-switch-key",default=None)
+# => value in the context map
+sequence_context_name:ContextVar[str] = ContextVar("sequence-context-name",default=None)
 
 
 class ContextException(Exception):
